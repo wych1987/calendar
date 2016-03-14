@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>一个简单的日历选择示例</title>
+<style>
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.flex-row {
+    display: -moz-box;
+    display: -webkit-box;
+    display: box;
+    display: flex;
+    -moz-flex: flex;
+    -moz-webkit: flex;
+    flex-flow: row;
+}
+.cxo-calendar-box{height:345px;width:375px;background: rgba(47, 50, 67,0.9);text-align:center;}
+        .cxo-tab-box02{border-radius: 2px;       border: 1px solid rgb(144, 145, 153);}
+        .cxo-tab-box02 li{flex:1;border-right:1px solid #909199;color:#92949c;margin-left:-1px;height:28px;box-sizing:border-box;line-height: 26px;}
+        .cxo-tab-box02 li:last-child{border:0 none;}
+        .cxo-tab-box02 li.active{color:#373b4e;background:#abadb3;}
+        .calendar-box{padding:15px 0;}
+        .calendar-box header{height:20px;color:#95979e;font-size:16px;position:relative;line-height:20px;padding-bottom: 15px;    border-bottom: 1px solid #323544;}
+        .calendar-box header .iconfont{position:absolute;font-size:18px;}
+        .calendar-box header [data-type='prev']{top:0px;left:5px;}
+        .calendar-box header [data-type='next']{top:1px;right:5px;}
+        .calendar-week-box{ margin:0;padding:0;border-bottom: 1px solid #323544;height:30px;box-sizing:border-box;line-height:28px;color: #63646f;}
+        .calendar-day-box{margin:0;padding:0;text-align: center;}
+        .calendar-week-box li{ flex:1;}
+        .calendar-day-box li{ display: -moz-box; display: -webkit-box; display: box;  display: flex;  -moz-flex: flex;
+            -moz-webkit: flex; flex-flow: row;height:30px;margin-top:5px;
+        }
+        .calendar-day-box span{-webkit-box-flex: 1;  -moz-box-flex: 1.0; -webkit-box-flex: 1.0;   -webkit-flex: 1.0; box-flex: 1.0; flex: 1;line-height: 30px;margin: 0 2.7%;position:relative;z-index:20;}
+        .calendar-day-box .calendar-disabled{color: #63646f;background: transparent; border-radius:0;}
+        .calendar-day-box .calendar-selected,.calendar-show:active{color:#262a3f;background:#7a7b83;border-radius:100%;}
+        .calendar-disabled:active{color: #63646f;    background: rgba(0, 0, 0, 0);        border-radius: 0;}
+        .calendar-day-box li.weekSelected{background:#575963;border-radius:30px;position:relative;}
+        .weekSelected:before,.weekSelected:after{position: absolute;
+            content: " ";
+            top: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            z-index: 10;
+            background: rgba(41,49,62,1);}
+        .weekSelected:before{left:-1px;}
+        .weekSelected:after{right:-1px;}
+		
+		.calendar-day-box {
+    color: #b1b1b7;
+}
+.calendar-next {
+    color: rgba(0,0,0,0);
+}
+</style>
+<script src="./calendar.js"></script>
+<script src="./vue.min.js"></script>
+</head>
+<body >
+<p>一个简单的日历选择，，留个记号。</p>
+<div class="cxo-calendar-box">
+ <div class="calendar-box" id="calendarBox">
+                 <header>{{headName}}<i class="iconfont icon-jiantouzuo" data-type="prev" v-on:click="prevClick">前</i><i class="iconfont icon-jiantouyou" data-type="next" v-on:click="nextClick">后</i></header>
+              
+                 <ol class="calendar-week-box flex-row">
+                     <li>一</li>
+                     <li>二</li>
+                     <li>三</li>
+                     <li>四</li>
+                     <li>五</li>
+                     <li>六</li>
+                     <li>日</li>
+                 </ol>
+                 <ol class="calendar-day-box" id="calendarDayContBox">
+                     <li v-for="li in date">
+                                <span v-for="d in li" :class="d.className" :data-date="d.date" v-on:click="dateClick(d)">{{d.day}}</span>
+                     </li>
+                 </ol>
+</div>
+</div>
+</body>
+<script>
+calendar.init({minDate:"2016-2-20",maxDate:"2017-8-8",selected:"2016-3-1"});
+var initDate = "2016-3-4";
+var d = calendar.getDateByIndex(initDate,0);
+	var calendarBox = new Vue({
+		el:"#calendarBox",
+		data:{
+			headName:d.year+"年"+d.month+"月",
+			date:calendar.formatDate(d.data),
+			monthStep:0,
+		},
+		methods:{
+			prevClick:function(){
+				 this.monthStep--;
+			},
+			nextClick:function(){
+				this.monthStep++; 
+			}
+		},
+		watch:{
+			monthStep:function(val,oldVal){
+				var d = calendar.getDateByIndex(initDate,val);
+				this.date = calendar.formatDate(d.data);
+				this.headName = d.year+"年"+d.month+"月";
+			}
+		}
+	})
+</script>
+</html>
